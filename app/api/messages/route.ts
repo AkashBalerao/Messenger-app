@@ -15,6 +15,7 @@ export async function POST(
       image,
       conversationId
     } = body;
+    console.log(message);
 
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 401 });

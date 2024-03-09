@@ -14,15 +14,18 @@ const Auth = () => {
         lg:px-8 
         bg-gray-100
       "
-    >
+      style={{
+        background: `
+          radial-gradient(black 1px, transparent 1px),
+          radial-gradient(black 1px, transparent 1px)
+        `,
+        backgroundSize: '25px 25px',
+        backgroundPosition: '0 0, 12.5px 12.5px',
+      }}
+      >
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Image
-          height="48"
-          width="48"
-          className="mx-auto w-auto"
-          src="/images/logo.png"
-          alt="Logo"
-        />
+      <span className="text-center text-7xl tracking-tight text-gray-900" style={{ fontFamily: 'Saniretro', color: 'blue',display: 'block',  }}>NEARME</span>
         <h2 
           className="
             mt-6 

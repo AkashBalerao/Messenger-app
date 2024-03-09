@@ -1,13 +1,12 @@
 'use client';
 import { User } from "@prisma/client";
+import UserBox from "./userBox";
 
-import UserBox from "./UserBox";
-
-interface UserListProps {
+interface NearUsersProps {
   items: User[];
 }
 
-const UserList: React.FC<UserListProps> = ({ 
+const UserList: React.FC<NearUsersProps> = ({ 
   items, 
 }) => {
   return ( 
@@ -36,12 +35,11 @@ const UserList: React.FC<UserListProps> = ({
               py-4
             "
           >
-            People
+            People Near You
           </div>
         </div>
         {items.map((item) => (
           <UserBox
-            key={item.id}
             data={item}
           />
         ))}

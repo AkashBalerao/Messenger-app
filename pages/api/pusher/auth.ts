@@ -8,6 +8,8 @@ export default async function handler(
   request: NextApiRequest, 
   response: NextApiResponse
 ) {
+
+  console.log("now");
   const session = await getServerSession(request, response, authOptions);
 
   if (!session?.user?.email) {
