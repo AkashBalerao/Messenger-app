@@ -101,7 +101,7 @@ function MapComponent({ name, location, availability }: { name: string | null,lo
                   <span className={markerClassother}>{name}</span>
                 </Tooltip>
                 <Popup>
-                <h2>{name.replace(/'/g, "&apos;")}'s Location</h2>
+                <h2>{name} Location</h2>
                   <p>Latitude: {location[0]}</p>
                   <p>Longitude: {location[1]}</p>
                 </Popup>
