@@ -8,7 +8,7 @@ import clsx from "clsx";
 import setUserAvailability from '@/app/actions/setAvaliability';
 
 
-function MapComponent({ availability }: { availability: boolean }) {
+function MapComponent({ name, location, availability }: { name: string | null,location:[number, number] | null, availability: boolean }) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [permissionDenied, setPermissionDenied] = useState(false);
   const [available, setAvailable] = useState(availability);
@@ -96,24 +96,18 @@ function MapComponent({ availability }: { availability: boolean }) {
                   <p>Longitude: {userLocation[1]}</p>
                 </Popup>
               </CircleMarker>
-              <CircleMarker center={[17.405311, 78.507334]} radius={10} pathOptions={{ color: 'green' }} className=''>
-              <div style={{ position: 'relative' }}>
-                  <Tooltip 
-                    permanent 
-                    direction="top" 
-                    offset={[0, -10]} 
-                  >
-                    <div>
-                      <span className={markerClassother}>Other</span>
-                    </div>
-                  </Tooltip>
-                </div>  
-              <Popup>
-                <h2>User's Location</h2>
-                <p>Latitude: {userLocation[0]}</p>
-                <p>Longitude: {userLocation[1]}</p>
-              </Popup>
-            </CircleMarker>
+              {name && (<CircleMarker center={[location[0],location[1]]} radius={10} pathOptions={{ color: 'green' }}>
+                <Tooltip permanent direction="top" offset={[0, -10]}>
+                  <span className={markerClassother}>{name}</span>
+                </Tooltip>
+                <Popup>
+                  <h2>{name}'s Location</h2>
+                  <p>Latitude: {location[0]}</p>
+                  <p>Longitude: {location[1]}</p>
+                </Popup>
+              </CircleMarker>
+              )}
+
             </>
             )}
           </MapContainer>

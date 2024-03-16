@@ -1,5 +1,5 @@
 'use client';
-
+import { useRouter } from "next/navigation";
 import { 
   HiPaperAirplane, 
   HiPhoto
@@ -16,6 +16,8 @@ import useConversation from "@/app/hooks/useConversation";
 
 const Form = () => {
   const { conversationId } = useConversation();
+  const router = useRouter();
+
 
   const {
     register,

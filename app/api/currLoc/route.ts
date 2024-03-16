@@ -5,12 +5,11 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 export async function POST(
   request: Request,
 ) {
-  console.log("here");
   try {
     const body = await request.json();
     console.log(body);
-    const state=body[0];
-    const district=body[1];
+    const latitude = body[0];
+    const longitude = body[1];
 
     // Retrieve the current user
     const currentUser = await getCurrentUser();
@@ -21,14 +20,15 @@ export async function POST(
     }
     console.log("User ID: " + currentUser.id);
 
-    // Update the state and district fields of the current user
+    // Update the latitude and longitude fields of the current user
     const updatedUser = await prisma.user.update({
       where: {
         id: currentUser.id
       },
       data: {
-        state,
-        district
+        // Update latitude and longitude fields
+        latitude,
+        longitude
       }
     });
 

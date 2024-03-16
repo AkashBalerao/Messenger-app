@@ -1,25 +1,12 @@
-'use client';
-
+'use client'
+import React, { useState } from 'react';
 import axios from "axios";
-import { signIn, useSession } from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
-import { BsGithub, BsGoogle  } from 'react-icons/bs';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { useRouter } from "next/navigation";
 
-import Input from "@/app/components/inputs/Input";
-import AuthSocialButton from './AuthSocialButton';
-import Button from "@/app/components/Button";
-import { toast } from "react-hot-toast";
+const LocationBox = () => {
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
 
-type Variant = 'LOGIN' | 'REGISTER';
-
-const AuthForm = () => {
-  const [state, setState] = useState<string>("");
-  const [district, setDistrict] = useState<string>("");
-  const [show, setShow] = useState<boolean>(false);
-
-  const stateData: { state: string, districts: string[] }[] = [
+  const stateData = [
     { state: "Andaman & Nicobar Islands", districts: ["Nicobars", "North and Middle Andaman", "South Andaman"] },
   { state: "Andhra Pradesh", districts: ["Anantapur", "Chittoor", "East Godavari", "Guntur", "Krishna", "Kurnool", "Prakasam", "Srikakulam", "Visakhapatnam", "Vizianagaram", "West Godavari", "Y.S.R. Kadapa"] },
   { state: "Arunachal Pradesh", districts: ["Anjaw", "Changlang", "Dibang Valley", "East Kameng", "East Siang", "Itanagar Capital Complex", "Kamle", "Kra Daadi", "Kurung Kumey", "Lepa Rada", "Lohit", "Longding", "Lower Dibang Valley", "Lower Siang", "Lower Subansiri", "Namsai", "Pakke Kessang", "Papum Pare", "Shi Yomi", "Siang", "Tawang", "Tirap", "Upper Siang", "Upper Subansiri", "West Kameng", "West Siang"] },
@@ -63,282 +50,65 @@ const AuthForm = () => {
     { state: "Uttar Pradesh", districts: ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Ayodhya", "Azamgarh", "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", "Basti", "Bhadohi", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddh Nagar", "Ghaziabad", "Ghazipur", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", "Kasganj", "Kaushambi", "Kheri", "Kushinagar", "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Pratapgarh", "Prayagraj", "Raebareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", "Unnao", "Varanasi"] },
     { state: "Uttarakhand", districts: ["Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar", "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal", "Udham Singh Nagar", "Uttarkashi"] },
     { state: "West Bengal", districts: ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Malda", "Murshidabad", "Nadia", "North 24 Parganas", "Paschim Bardhaman", "Paschim Medinipur", "Purba Bardhaman", "Purba Medinipur", "Purulia", "South 24 Parganas", "Uttar Dinajpur"] },        
+
   ];
 
-  const session = useSession();
-  const router = useRouter();
-  const [variant, setVariant] = useState<Variant>('LOGIN');
-  const [isLoading, setIsLoading] = useState(false);
+  const handleStateChange = (e) => {
+    setSelectedState(e.target.value);
+    setSelectedDistrict(''); // Reset selected district when state changes
+  };
 
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [permissionDenied, setPermissionDenied] = useState(false);
+  const handleDistrictChange = (e) => {
+    setSelectedDistrict(e.target.value);
+  };
 
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.error('Geolocation is not supported by this browser');
-      return;
+  const handleSubmit = () => {
+    if (selectedState && selectedDistrict) {
+      console.log('Selected State:', selectedState);
+      console.log('Selected District:', selectedDistrict);
+      const loc=[selectedState, selectedDistrict];
+      axios.post('/api/location', loc);
     }
-    navigator.permissions.query({ name: 'geolocation' }).then((permissionStatus) => {
-      if (permissionStatus.state === 'granted') {
-        // If permission is granted, get user's location
-        console.log('Geolocation is supported');
+  };
 
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setUserLocation([latitude, longitude]);
-          },
-          (error) => {
-            console.error('Error getting user location:', error);
-          }
-        );
-      } else if (permissionStatus.state === 'prompt') {
-        // If permission is prompt, show a notification asking for permission
-        Notification.requestPermission().then((result) => {
-          if (result === 'granted') {
-            // If permission is granted, get user's location
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                const { latitude, longitude } = position.coords;
-                setUserLocation([latitude, longitude]);
-              },
-              (error) => {
-                console.error('Error getting user location:', error);
-              }
-            );
-          } else if (result === 'denied') {
-            // If permission is denied, set state to indicate permission denied
-            setPermissionDenied(true);
-          }
-        });
-      } else if (permissionStatus.state === 'denied') {
-        // If permission is denied, set state to indicate permission denied
-        setPermissionDenied(true);
-      }
-    });
-  }, []);
-  
-
-  useEffect(() => {
-    if (session?.status === 'authenticated') {
-      console.log(userLocation);
-      axios.post('/api/currLoc', userLocation);
-      router.push('/conversations')
-    }
-  }, [session?.status, router]);
-
-  const toggleVariant = useCallback(() => {
-    if (variant === 'LOGIN') {
-      setVariant('REGISTER');
-    } else {
-      setVariant('LOGIN');
-    }
-  }, [variant]);
-
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors,
-    }
-  } = useForm<FieldValues>({
-    defaultValues: {
-      name: '',
-      email: '',
-      password: ''
-    }
-  });
-
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setIsLoading(true);
-    const loc={state, district};
-    console.log(loc);
-
-    if (variant === 'REGISTER') {
-      axios.post('/api/register', data)
-      .then(() => signIn('credentials', {
-        ...data,
-        redirect: false,
-      }))
-      .then((callback) => {
-        if (callback?.error) {
-          toast.error('Invalid credentials!');
-        }
-
-        if (callback?.ok) {
-          axios.post('/api/location', loc);
-          router.push('/conversations')
-        }
-      })
-      .catch(() => toast.error('Something went wrong!'))
-      .finally(() => setIsLoading(false))
-    }
-
-    if (variant === 'LOGIN') {
-      signIn('credentials', {
-        ...data,
-        redirect: false
-      })
-      .then((callback) => {
-        if (callback?.error) {
-          toast.error('Invalid credentials!');
-        }
-
-        if (callback?.ok) {
-          router.push('/conversations')
-        }
-      })
-      .finally(() => setIsLoading(false))
-    }
-  }
-
-  const socialAction = (action: string) => {
-    setIsLoading(true);
-
-    signIn(action, { redirect: false })
-      .then((callback) => {
-        if (callback?.error) {
-          toast.error('Invalid credentials!');
-        }
-
-        if (callback?.ok) {
-          router.push('/conversations')
-        }
-      })
-      .finally(() => setIsLoading(false));
-  } 
-
-  return ( 
-    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div 
-        className="
-        bg-white
-          px-4
-          py-8
-          shadow
-          sm:rounded-lg
-          sm:px-10
-        "
-      >
-        <form 
-          className="space-y-6" 
-          onSubmit={handleSubmit(onSubmit)}
+  return (
+    <div className="p-4 bg-gray-100 rounded-md w-62">
+      <h2 className="text-lg font-semibold mb-2">Set Location</h2>
+      <div className="mb-2">
+        <label htmlFor="state" className="block font-semibold">State:</label>
+        <select
+          id="state"
+          value={selectedState}
+          onChange={handleStateChange}
+          className="border rounded-md p-2 w-full"
+          placeholder="Select state"
         >
-          {variant === 'REGISTER' && (
-            <>
-            <Input
-              disabled={isLoading}
-              register={register}
-              errors={errors}
-              required
-              id="name" 
-              label="Name"
-              />
-            </>
-          )}
-          <Input 
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-            required
-            id="email" 
-            label="Email address" 
-            type="email"
-          />
-          <Input 
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-            required
-            id="password" 
-            label="Password" 
-            type="password"
-          />
-          {variant === 'REGISTER' && (
-            <>
-            <select
-            style={{ marginBottom: '10px', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '16px', width: '300px' }}
-            value={state}
-            onChange={(event) => setState(event.target.value)}
-            >
-            <option value="">Select State</option>
-            {stateData.map((stateObj, index) => (
-              <option key={index} value={stateObj.state}>{stateObj.state}</option>
-              ))}
-          </select>
-          <select
-            style={{ marginBottom: '10px', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '16px', width: '300px' }}
-            value={district}
-            onChange={(event) => setDistrict(event.target.value)}
-            >
-            <option value="">Select District</option>
-            {state && stateData.find(item => item.state === state)?.districts.map((districtName, index) => (
-              <option key={index} value={districtName}>{districtName}</option>
-              ))}
-          </select>
-              </>
-          )}
-          <div>
-            <Button disabled={isLoading} fullWidth type="submit">
-              {variant === 'LOGIN' ? 'Sign in' : 'Register'}
-            </Button>
-          </div>
-        </form>
-
-        <div className="mt-6">
-          <div className="relative">
-            <div 
-              className="
-                absolute 
-                inset-0 
-                flex 
-                items-center
-              "
-            >
-              <div className="w-full border-t border-gray-300" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-gray-500">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6 flex gap-2">
-            <AuthSocialButton 
-              icon={BsGithub} 
-              onClick={() => socialAction('github')} 
-            />
-            <AuthSocialButton 
-              icon={BsGoogle} 
-              onClick={() => socialAction('google')} 
-            />
-          </div>
-        </div>
-        <div 
-          className="
-            flex 
-            gap-2 
-            justify-center 
-            text-sm 
-            mt-6 
-            px-2 
-            text-gray-500
-          "
-        >
-          <div>
-            {variant === 'LOGIN' ? 'New to Messenger?' : 'Already have an account?'} 
-          </div>
-          <div 
-            onClick={toggleVariant} 
-            className="underline cursor-pointer"
-          >
-            {variant === 'LOGIN' ? 'Create an account' : 'Login'}
-          </div>
-        </div>
+          <option value="">Select State</option>
+          {stateData.map((item, index) => (
+            <option key={index} value={item.state}>{item.state}</option>
+          ))}
+        </select>
       </div>
+      {selectedState && (
+        <div className="mb-2">
+          <label htmlFor="district" className="block font-semibold">District:</label>
+          <select
+            id="district"
+            value={selectedDistrict}
+            onChange={handleDistrictChange}
+            className="border rounded-md p-2 w-full"
+            placeholder="Select district"
+          >
+            <option value="">Select District</option>
+            {stateData.find((item) => item.state === selectedState)?.districts.map((district, index) => (
+              <option key={index} value={district}>{district}</option>
+            ))}
+          </select>
+        </div>
+      )}
+      <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Update</button>
     </div>
   );
-}
- 
-export default AuthForm;
+};
+
+export default LocationBox;
