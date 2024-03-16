@@ -40,6 +40,7 @@ const UserList: React.FC<NearUsersProps> = ({
         </div>
         {items.map((item) => (
           <UserBox
+            key={item.id}
             data={item}
           />
         ))}
