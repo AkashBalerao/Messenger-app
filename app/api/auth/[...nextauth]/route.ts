@@ -63,19 +63,16 @@
 
 // export { handler as GET, handler as POST };
 
-// app/api/auth/[...nextauth]/route.ts
+import bcrypt from "bcrypt"
+import NextAuth, { AuthOptions } from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import GithubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 
-import bcrypt from "bcrypt";
-import { NextApiRequest, NextApiResponse } from "next";
-import NextAuth, { AuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import GithubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import prisma from "@/app/libs/prismadb"
 
-import prisma from "@/app/libs/prismadb";
-
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
@@ -126,12 +123,7 @@ const authOptions: AuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 }
-export const GET = NextAuth(authOptions);
-export const POST = NextAuth(authOptions);
 
-export { authOptions };
+const handler = NextAuth(authOptions);
 
-
-// Export individual functions for HTTP methods if needed
-// export const GET = NextAuth(authOptions);
-// export const POST = NextAuth(authOptions);
+export { handler as GET, handler as POST };
