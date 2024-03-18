@@ -96,17 +96,18 @@ function MapComponent({ name, location, availability }: { name: string | null,lo
                   <p>Longitude: {userLocation[1]}</p>
                 </Popup>
               </CircleMarker>
-              {name && (<CircleMarker center={[location[0],location[1]]} radius={10} pathOptions={{ color: 'green' }}>
-                <Tooltip permanent direction="top" offset={[0, -10]}>
-                  <span className={markerClassother}>{name}</span>
-                </Tooltip>
-                <Popup>
-                <h2>{name} Location</h2>
-                  <p>Latitude: {location[0]}</p>
-                  <p>Longitude: {location[1]}</p>
-                </Popup>
-              </CircleMarker>
-              )}
+              { name && location && (
+  <CircleMarker center={[location?.[0] || 0, location?.[1] || 0]} radius={10} pathOptions={{ color: 'green' }}>
+    <Tooltip permanent direction="top" offset={[0, -10]}>
+      <span className={markerClassother}>{name}</span>
+    </Tooltip>
+    <Popup>
+      <h2>{name} Location</h2>
+      <p>Latitude: {location?.[0]}</p>
+      <p>Longitude: {location?.[1]}</p>
+    </Popup>
+  </CircleMarker>
+)}
 
             </>
             )}

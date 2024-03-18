@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import axios from "axios";
 
 const LocationBox = () => {
@@ -53,12 +53,12 @@ const LocationBox = () => {
 
   ];
 
-  const handleStateChange = (e) => {
+  const handleStateChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedState(e.target.value);
     setSelectedDistrict(''); // Reset selected district when state changes
   };
 
-  const handleDistrictChange = (e) => {
+  const handleDistrictChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedDistrict(e.target.value);
   };
 
