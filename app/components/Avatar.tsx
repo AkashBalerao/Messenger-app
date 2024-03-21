@@ -9,7 +9,7 @@ interface AvatarProps {
   user?: User;
 };
 
-const Avatar: React.FC<AvatarProps> = ({ user }) => {
+const Avatar: React.FC<AvatarProps> = ({ user}) => {
   const { members } = useActiveList();
   const isActive = members.indexOf(user?.email!) !== -1;
 
@@ -31,7 +31,7 @@ const Avatar: React.FC<AvatarProps> = ({ user }) => {
           alt="Avatar"
         />
       </div>
-      {isActive ? (
+      {isActive && (
         <span 
           className="
             absolute 
@@ -48,7 +48,7 @@ const Avatar: React.FC<AvatarProps> = ({ user }) => {
             md:w-3
           " 
         />
-      ) : null}
+      ) }
     </div>
   );
 }

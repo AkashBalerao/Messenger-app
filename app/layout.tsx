@@ -26,6 +26,6 @@ export default function RootLayout({
           {children}
         </AuthContext>
       </body>
-    </html>
+    </html> 
   );
 }

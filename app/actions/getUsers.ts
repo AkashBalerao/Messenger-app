@@ -56,7 +56,6 @@ const getUsers = async () => {
 
     // Deduplicate users
     const uniqueUsers = otherUsers.filter((user, index) => otherUsers.findIndex(u => u.id === user.id) === index);
-    console.log('uniqueUsers', uniqueUsers);
 
     return uniqueUsers;
   } catch (error: any) {

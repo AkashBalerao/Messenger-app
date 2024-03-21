@@ -23,6 +23,7 @@ const useActiveChannel = () => {
     });
 
     channel.bind("pusher:member_added", (member: Record<string, any>) => {
+      console.log(`Member added: ${member.id}`);
       add(member.id)
     });
 
@@ -36,7 +37,7 @@ const useActiveChannel = () => {
         setActiveChannel(null);
       }
     }
-  }, [activeChannel, set, add, remove]);
+  },[activeChannel, set, add, remove]);
 }
 
 export default useActiveChannel;
