@@ -77,33 +77,33 @@ const LocationBox = () => {
       <div className="mb-2">
         <label htmlFor="state" className="block font-semibold">State:</label>
         <select
-          id="state"
-          value={selectedState}
-          onChange={handleStateChange}
-          className="border rounded-md p-2 w-full"
-          placeholder="Select state"
-        >
-          <option value="">Select State</option>
-          {stateData.map((item, index) => (
-            <option key={index} value={item.state}>{item.state}</option>
-          ))}
-        </select>
+            id="state"
+            value={selectedState}
+            onChange={handleStateChange}
+            className="border rounded-md p-2 w-full"
+          >
+            <option value="">Select State</option>
+            {stateData.map((item, index) => (
+              <option key={index} value={item.state}>{item.state}</option>
+            ))}
+          </select>
+
       </div>
       {selectedState && (
         <div className="mb-2">
           <label htmlFor="district" className="block font-semibold">District:</label>
           <select
-            id="district"
-            value={selectedDistrict}
-            onChange={handleDistrictChange}
-            className="border rounded-md p-2 w-full"
-            placeholder="Select district"
-          >
-            <option value="">Select District</option>
-            {stateData.find((item) => item.state === selectedState)?.districts.map((district, index) => (
-              <option key={index} value={district}>{district}</option>
-            ))}
-          </select>
+              id="district"
+              value={selectedDistrict}
+              onChange={handleDistrictChange}
+              className="border rounded-md p-2 w-full"
+            >
+              <option value="">Select District</option>
+              {(stateData.find((item) => item.state === selectedState)?.districts ?? []).map((district, index) => (
+                <option key={index} value={district}>{district}</option>
+              ))}
+            </select>
+
         </div>
       )}
       <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Update</button>
