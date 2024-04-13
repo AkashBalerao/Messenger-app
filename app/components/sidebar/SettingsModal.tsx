@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { User } from '@prisma/client';
 import { CldUploadButton } from 'next-cloudinary';
+import FileUploadComponent from './FileUploadComponent';
 
 import Input from "../inputs/Input";
 import Modal from '../modals/Modal';
@@ -44,12 +45,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   });
 
   const image = watch('image');
-
-  const handleUpload = (result: any) => {
-    setValue('image', result.info.secure_url, { 
-      shouldValidate: true 
-    });
-  }
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
@@ -105,27 +100,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   Photo
                 </label>
                 <div className="mt-2 flex items-center gap-x-3">
-                  <Image
-                    width="48"
-                    height="48" 
-                    className="rounded-full" 
-                    src={image || currentUser?.image || '/images/placeholder.jpg'}
-                    alt="Avatar"
-                  />
-                  <CldUploadButton 
-                    options={{ maxFiles: 1 }} 
-                    onUpload={handleUpload} 
-                    uploadPreset="pgc9ehd5"
-                  >
-                    <Button
-                      disabled={isLoading}
-                      secondary
-                      type="button"
-                    >
-                      Change
-                    </Button>
-                  </CldUploadButton>
+                  <div className="w-12 h-12 rounded-full overflow-hidden">
+                    <Image
+                      src={image || currentUser?.image || '/images/placeholder.jpg'}
+                      alt="Avatar"
+                      width={50}
+                      height={50}
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <FileUploadComponent />
+                  </div>
                 </div>
+
               </div>
             </div>
           </div>

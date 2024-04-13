@@ -23,6 +23,7 @@ const UserList: React.FC<NearUsersProps> = ({
         border-r 
         border-gray-200
         block w-full left-0
+        flex items-center justify-center
       "
     >
       <div className="px-5">
@@ -38,12 +39,16 @@ const UserList: React.FC<NearUsersProps> = ({
             People Near You
           </div>
         </div>
-        {items.map((item) => (
-          <UserBox
-            key={item.id}
-            data={item}
-          />
-        ))}
+        {items.length === 0 ? (
+          <p className="text-gray-500 text-center">There are no people near you.</p>
+        ) : (
+          items.map((item) => (
+            <UserBox
+              key={item.id}
+              data={item}
+            />
+          ))
+        )}
       </div>
     </aside>
   );

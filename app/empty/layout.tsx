@@ -42,27 +42,17 @@ export default async function UsersLayout({
      <UserList items={users} />
    </div>
    <div className="absolute top-0 right-0 m-4 z-10 p-4 bg-white rounded-lg shadow-md mb-8">
-    <div className=" rounded-md p-4">
-      
-        <label className="flex items-center">
-          <span className="mr-2">{availability ? "I'm Available" : "I'm Unavailable"}</span>
-          <div className="ml-auto">
-            <input
-              type="checkbox"
-              className="hidden"
-              checked={availability}
-              />
-            <div className={`w-14 h-8 rounded-full p-1 flex items-center ${availability ? 'bg-green-500' : 'bg-gray-400'}`}>
-              <div className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${availability ? 'translate-x-6 bg-green': ' '}`}></div>
-            </div>
-          </div>
-        </label>
-              </div>
-              <div>
-
-          <LocationBox/>
-              </div>
+      <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold mb-2 text-black-700">Your Set Location</h2>
+        <p className="text-gray-600">State: {loc?.state || 'None'}</p>
+        <p className="text-gray-600">District: {loc?.district || 'None'}</p>
       </div>
+      <div className="mt-4">
+        <LocationBox/>
+      </div>
+    </div>
+
+
       
         <div className="absolute bottom-0 right-0 m-4 z-10 p-4 bg-white rounded-lg shadow-md">
           <NotificationsComponent notifications={notifications} />

@@ -209,21 +209,28 @@ const AuthForm = () => {
   } 
 
   return ( 
+    <>
+     {variant=== 'LOGIN' &&(<div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <h2 className="text-center text-3xl tracking-tight text-gray-900">Sign In </h2>
+        </div>)}
+        {variant=== 'REGISTER' &&(<div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <h2 className="text-center text-3xl tracking-tight text-gray-900">Create your account</h2>
+        </div>)}
     <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div 
         className="
         bg-white
-          px-4
-          py-8
-          shadow
-          sm:rounded-lg
-          sm:px-10
+        px-4
+        py-8
+        shadow
+        sm:rounded-lg
+        sm:px-10
         "
-      >
+        >
         <form 
           className="space-y-6" 
           onSubmit={handleSubmit(onSubmit)}
-        >
+          >
           {variant === 'REGISTER' && (
             <>
             <Input
@@ -253,8 +260,8 @@ const AuthForm = () => {
             id="password" 
             label="Password" 
             type="password"
-          />
-          {variant === 'REGISTER' && (
+            />
+          {/* {variant === 'REGISTER' && (
             <>
             <select
             style={{ marginBottom: '10px', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '16px', width: '300px' }}
@@ -267,17 +274,17 @@ const AuthForm = () => {
               ))}
           </select>
           <select
-            style={{ marginBottom: '10px', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '16px', width: '300px' }}
-            value={district}
-            onChange={(event) => setDistrict(event.target.value)}
-            >
-            <option value="">Select District</option>
-            {state && stateData.find(item => item.state === state)?.districts.map((districtName, index) => (
-              <option key={index} value={districtName}>{districtName}</option>
-              ))}
+          style={{ marginBottom: '10px', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '16px', width: '300px' }}
+          value={district}
+          onChange={(event) => setDistrict(event.target.value)}
+          >
+          <option value="">Select District</option>
+          {state && stateData.find(item => item.state === state)?.districts.map((districtName, index) => (
+            <option key={index} value={districtName}>{districtName}</option>
+          ))}
           </select>
-              </>
-          )}
+          </>
+        )} */}
           <div>
             <Button disabled={isLoading} fullWidth type="submit">
               {variant === 'LOGIN' ? 'Sign in' : 'Register'}
@@ -294,7 +301,7 @@ const AuthForm = () => {
                 flex 
                 items-center
               "
-            >
+              >
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
@@ -308,37 +315,39 @@ const AuthForm = () => {
             <AuthSocialButton 
               icon={BsGithub} 
               onClick={() => socialAction('github')} 
-            />
+              />
             <AuthSocialButton 
               icon={BsGoogle} 
               onClick={() => socialAction('google')} 
-            />
+              />
           </div>
         </div>
         <div 
           className="
-            flex 
-            gap-2 
-            justify-center 
-            text-sm 
-            mt-6 
-            px-2 
-            text-gray-500
+          flex 
+          gap-2 
+          justify-center 
+          text-sm 
+          mt-6 
+          px-2 
+          text-gray-500
           "
-        >
+          >
           <div>
             {variant === 'LOGIN' ? 'New to Messenger?' : 'Already have an account?'} 
           </div>
           <div 
             onClick={toggleVariant} 
             className="underline cursor-pointer"
-          >
+            >
             {variant === 'LOGIN' ? 'Create an account' : 'Login'}
           </div>
         </div>
       </div>
     </div>
+            </> 
   );
+
 }
  
 export default AuthForm;

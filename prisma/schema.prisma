@@ -34,9 +34,10 @@ model User {
 
   available       Boolean?   @default(true)
 
-  match Match?
-
   notifications     Notification[]
+
+  eventIds        String[]   @db.ObjectId
+  eventsParticipated   Event[]      @relation("EventsParticipation", fields: [eventIds], references: [id])
 }
 
 model Account {
@@ -88,11 +89,19 @@ model Message {
   sender         User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
 
-model Match {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @unique @db.ObjectId // relation scalar field (used in the `@relation` attribute above)
+model Event {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  latitude       Float
+  longitude      Float
+  startTime      DateTime       
+  participants   User[]       @relation("EventsParticipation", fields: [participantIds], references: [id])
+  participantIds String[]     @db.ObjectId
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  maxParticipants  Int
 }
+
 
 // schema.prisma
 

@@ -73,7 +73,7 @@ const LocationBox = () => {
 
   return (
     <div className="p-4 bg-gray-100 rounded-md w-62">
-      <h2 className="text-lg font-semibold mb-2">Set Location</h2>
+      <h2 className="text-lg font-semibold mb-2">Update Location</h2>
       <div className="mb-2">
         <label htmlFor="state" className="block font-semibold">State:</label>
         <select

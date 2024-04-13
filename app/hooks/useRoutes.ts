@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import { HiChat } from 'react-icons/hi';
 import { HiArrowLeftOnRectangle, HiUsers } from 'react-icons/hi2';
 import { BsFillPersonPlusFill } from "react-icons/bs";
+import { BiSolidNetworkChart } from "react-icons/bi";
 import { signOut } from "next-auth/react";
 import useConversation from "./useConversation";
 
@@ -11,7 +12,13 @@ const useRoutes = () => {
   const { conversationId } = useConversation();
 
   const routes = useMemo(() => [
-    { 
+    {
+      label: 'Events',
+      href: '/events',
+      icon: BiSolidNetworkChart,
+      active: pathname === '/events'
+    },
+    {   
       label: 'Chat', 
       href: '/conversations', 
       icon: HiChat,

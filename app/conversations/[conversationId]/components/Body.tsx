@@ -8,7 +8,6 @@ import useConversation from "@/app/hooks/useConversation";
 import MessageBox from "./MessageBox";
 import { FullMessageType } from "@/app/types";
 import { find } from "lodash";
-import getMessages from "@/app/actions/getMessages";
 
 interface BodyProps {
   initialMessages: FullMessageType[];
@@ -19,18 +18,6 @@ const Body: React.FC<BodyProps> = ({ initialMessages = []}) => {
   const [messages, setMessages] = useState(initialMessages);
   
   const { conversationId } = useConversation();
-
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-      try {
-        const fetchedMessages = await getMessages(conversationId);
-        setMessages(fetchedMessages);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
-    },100);
-    return () => clearInterval(intervalId);
-  }, []);
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);
@@ -68,6 +55,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages = []}) => {
     pusherClient.bind('messages:new', messageHandler)
     pusherClient.bind('message:update', updateMessageHandler);
 
+    console.log('pusherClient');
     return () => {
       pusherClient.unsubscribe(conversationId)
       pusherClient.unbind('messages:new', messageHandler)
