@@ -14,6 +14,10 @@ import { toast } from "react-hot-toast";
 
 type Variant = 'LOGIN' | 'REGISTER';
 
+
+// Take a heap snapshot
+
+
 const AuthForm = () => {
   const [state, setState] = useState<string>("");
   const [district, setDistrict] = useState<string>("");
