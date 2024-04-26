@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String?    @unique
+  emailVerified   DateTime?
+  image           String?
+  hashedPassword  String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  latitude        Float?
+  longitude       Float?     
+
+  state           String?
+  district        String?
+
+  conversationIds String[]   @db.ObjectId
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+  
+  seenMessageIds  String[]   @db.ObjectId
+  seenMessages    Message[]  @relation("Seen", fields: [seenMessageIds], references: [id])
+
+  accounts        Account[]
+  messages        Message[]
+
+  available       Boolean?   @default(true)
+
+  notifications     Notification[]
+
+  eventIds           String[]     @db.ObjectId
+  eventsParticipated  Event[]       @relation("EventsParticipation", fields: [eventIds], references: [id])
+  
+  eventsCreated       Event[]       @relation("EventsCreated")
+}
+
+model Event {
+  id                  String       @id @default(auto()) @map("_id") @db.ObjectId
+  title               String
+  latitude            Float
+  longitude           Float
+  startTime           DateTime
+  participants        User[]       @relation("EventsParticipation", fields: [participantIds], references: [id])
+  participantIds      String[]     @db.ObjectId
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  maxParticipants     Int
+  type                EventType    // New field for event type
+  duration            Int          // Duration of the event in minutes or hours
+  picture             String       // URL or reference to an image for the event
+  // Field to represent the owner of the event
+  owner               User         @relation("EventsCreated", fields: [ownerId], references: [id])
+  ownerId             String       @db.ObjectId
+}
+
+
+enum EventType {
+  SOCIAL
+  SPORTS
+  COMMUNITY
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Conversation {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime    @default(now())
+  lastMessageAt DateTime    @default(now())
+  name         String?
+  isGroup      Boolean?
+  
+  messagesIds  String[]    @db.ObjectId
+  messages     Message[]
+
+  userIds      String[]    @db.ObjectId
+  users        User[]      @relation(fields: [userIds], references: [id])
+}
+
+model Message {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  body           String?
+  image          String?
+  createdAt      DateTime @default(now())
+
+  seenIds        String[] @db.ObjectId
+  seen           User[]   @relation("Seen", fields: [seenIds], references: [id])
+
+  conversationId String   @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  senderId       String   @db.ObjectId
+  sender         User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+
+
+// schema.prisma
+
+model Notification {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  recipient   User       @relation(fields: [recipientId], references: [id])
+  recipientId String
+  message     String
+  read        Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+}
