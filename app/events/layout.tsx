@@ -12,7 +12,6 @@ export default async function EventsLayout({
     const events = await getAllEvents();
 
   return (
-    // @ts-expect-error Server Component
     <>
     <Sidebar>
         <Map events={events}/>

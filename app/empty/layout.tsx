@@ -35,7 +35,6 @@ export default async function UsersLayout({
   }
 
   return (
-   // @ts-expect-error Server Component
    <Sidebar>
    <div className="h-full relative">  
      <Map name={name} location= {location} availability={availability} />
